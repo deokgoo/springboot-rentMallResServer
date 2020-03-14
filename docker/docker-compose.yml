@@ -1,0 +1,30 @@
+version: '3.1'
+
+services:
+  rentmall-db:
+    build: './mysql'
+    environment:
+      MYSQL_DATABASE: 'rent_mall'
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - '3307:3306'
+  rentmall-cache:
+    build: './redis'
+    environment:
+      REDIS_PASSWORD: 'password'
+    ports:
+      - '6379:6379'
+  rentmall-s3:
+    build: './minio'
+    environment:
+      MINIO_ACCESS_KEY: 'admin'
+      MINIO_SECRET_KEY: 'rentmall'
+    volumes:
+    - ./minio/data:/home/shared
+    ports:
+      - '9000:9000'
